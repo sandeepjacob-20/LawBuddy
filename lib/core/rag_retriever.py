@@ -1,9 +1,10 @@
+import os
 from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains.query_constructor.base import AttributeInfo
 from langchain.retrievers.self_query.base import SelfQueryRetriever
 from langchain_google_genai import ChatGoogleGenerativeAI
-from lib.utils.config_reader import ConfigInfo as config, LlmConfigInfo as llm_config
+from lib.utils.config_reader import ConfigInfo, LlmConfigInfo
 from langchain_core.tools import tool
 
 
@@ -18,10 +19,13 @@ class RAGRetriever:
             AttributeInfo(name="section_name", description="The name of the section or a brief summary of the offense.", type="string"),
         ]
         self.document_content_description = "A section from the Bharatiya Nyaya Sanhita (BNS) describing a criminal offense, ist BNS section, its definition, and its punishment."
+        llm_config = LlmConfigInfo()
         self.llm = ChatGoogleGenerativeAI(model=llm_config.model)
         self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
         self.embeddings = HuggingFaceEmbeddings(model_name=self.model_name)
-        self.vectorstore = Chroma(persist_directory=config.chroma_persist_directory, embedding_function=self.embeddings,collection_name=config.chroma_collection_name)
+        config = ConfigInfo()
+        persist_directory = os.path.join(os.path.dirname(__file__), '..', config.chroma_persist_directory)
+        self.vectorstore = Chroma(persist_directory=persist_directory, embedding_function=self.embeddings,collection_name=config.chroma_collection_name)
 
     @tool
     def rag_retriever(self, query: str):
