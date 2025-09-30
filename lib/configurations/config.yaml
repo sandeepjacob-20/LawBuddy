@@ -1,0 +1,3 @@
+ChromaDB:
+  persist_directory: "../RAG/chroma_db"
+  collection_name: "legal_docs"
