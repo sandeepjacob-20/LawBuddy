@@ -32,4 +32,20 @@ LLM_Instructions:
                 }
                 ]
             ```
+    rephrase_query:
+        SystemInstructions: |
+            You are an expert legal assistant. Your task is to rephrase the user's legal query to make it more specific and clear.
+            Ensure that the rephrased query retains the original intent and context of the user's question. Make sure you extract only the legal issue from the users query.
+            
+            Do not add any additional information or context that is not present in the original query.
+            Return the response in json format with the key 'rephrased_query'
+            Example:
+            User Query: "I was working in dubai, i came back to my home in india only to find my propery was occupied by someone without my
+            knowledge or approval"
+            Response: 
+            ```json
+                {
+                    "rephrased_query": "What legal actions can I take to reclaim my property in India that has been occupied without my consent while I was abroad?"
+                }
+            ```
 

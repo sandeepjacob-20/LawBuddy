@@ -20,10 +20,15 @@ class ConfigInfo:
 class LlmConfigInfo:
     def __init__(self):
         self.config_path = os.path.join(os.path.dirname(__file__), '..', 'configurations', 'llm_config.yaml')
-        self.model = read_config(self.config_path)['LLM_Instructions']['model']
+        self.model = read_config(self.config_path)['LLM_Instructions']['Model']
         self.gemini_api_key = os.environ['gemini_api_key']
 
 class LlmConfigInfo_LegalCaseSearch:
     def __init__(self):
         self.config_path = os.path.join(os.path.dirname(__file__), '..', 'configurations', 'llm_config.yaml')
         self.system_prompt = read_config(self.config_path)['legal_case_search']['SystemInstructions']
+
+class LlmConfigInfo_Rephraser:
+    def __init__(self):
+        self.config_path = os.path.join(os.path.dirname(__file__), '..', 'configurations', 'llm_config.yaml')
+        self.system_prompt = read_config(self.config_path)['rephrase_query']['SystemInstructions']

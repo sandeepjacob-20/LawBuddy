@@ -5,8 +5,6 @@ from langchain.chains.query_constructor.base import AttributeInfo
 from langchain.retrievers.self_query.base import SelfQueryRetriever
 from langchain_google_genai import ChatGoogleGenerativeAI
 from lib.utils.config_reader import ConfigInfo, LlmConfigInfo
-from langchain_core.tools import tool
-
 
 class RAGRetriever:
 
@@ -27,7 +25,6 @@ class RAGRetriever:
         persist_directory = os.path.join(os.path.dirname(__file__), '..', config.chroma_persist_directory)
         self.vectorstore = Chroma(persist_directory=persist_directory, embedding_function=self.embeddings,collection_name=config.chroma_collection_name)
 
-    @tool
     def rag_retriever(self, query: str):
         '''
         This tool retrieves relevant sections from the Bharatiya Nyaya Sanhita (BNS) based on a legal query.
