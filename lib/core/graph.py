@@ -1,19 +1,18 @@
 from typing import Literal
 from langgraph.prebuilt import ToolNode
-from lib.core.legal_helper_tool import LegalHelperTool
+from lib.core.legal_helper_tool import legal_helper
 from langgraph.graph import StateGraph, END, MessagesState
-from lib.core.gemini import GeminiClient
+from lib.core.ollama import OllamaClient
 from langgraph.checkpoint.memory import MemorySaver
+from langchain.schema import AIMessage
 
 
 class Graph:
     def __init__(self):
-        self.legal_helper_tool = LegalHelperTool.legal_helper
-        self.tools = [
-            self.legal_helper_tool
-        ]
+        self.tools = [legal_helper.func]
         self.tool_node = ToolNode(self.tools)
-        self.client = GeminiClient(tools=self.tools).client
+        self.client = OllamaClient(tools=self.tools).client
+        # self.client = OllamaClient().client
         self.checkpointer = MemorySaver()
         self.agent = self.create_workflow()
 
@@ -21,7 +20,7 @@ class Graph:
         messages = state['messages']
         last_message = messages[-1]
 
-        if last_message.tool_calls:
+        if isinstance(last_message, AIMessage) and last_message.tool_calls:
             print("Tool calls made:", last_message.tool_calls)
             return "Tools"
         
@@ -34,7 +33,8 @@ class Graph:
         model = self.client
         try:
             response = model.invoke(messages)
-            return {'messages': [response]}
+            state["messages"].append(response)
+            return state
         except Exception as e:
             print("Error during model invocation:", e)
             return {'messages': []}
@@ -47,14 +47,14 @@ class Graph:
         workflow.add_node('Tools', self.tool_node)
 
         workflow.set_entry_point('agent')
-        workflow.add_conditional_edges('agent', self.should_continue)
+        workflow.add_conditional_edges('agent',self.should_continue)
         workflow.add_edge('Tools', 'agent')
 
         app = workflow.compile(
             checkpointer=self.checkpointer
         )
 
-        app.get_graph.print_ascii()
+        app.get_graph() .print_ascii()
 
         return app
 

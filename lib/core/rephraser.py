@@ -4,14 +4,17 @@ from lib.utils.config_reader import LlmConfigInfo, LlmConfigInfo_Rephraser
 import json
 
 class Rephraser:
-    def __init__(self, model: str):
-        llm_config = LlmConfigInfo
-        rephraser_config = LlmConfigInfo_Rephraser
-        self.client = genai.Client(api_key=llm_config.gemini_api_key)
-        self.config = types.GenerateContentConfig(
-            system_instruction=rephraser_config.system_prompt
-        )
-        self.model = llm_config.model
+    def __init__(self):
+        try:
+            llm_config = LlmConfigInfo()
+            rephraser_config = LlmConfigInfo_Rephraser()
+            self.client = genai.Client(api_key=llm_config.gemini_api_key)
+            self.config = types.GenerateContentConfig(
+                system_instruction=rephraser_config.system_prompt
+            )
+            self.model = llm_config.model
+        except Exception as e:
+            print("Error initializing Rephraser:", e)
 
     def rephrase_query(self, user_input: str) -> str:
         '''
@@ -19,11 +22,17 @@ class Rephraser:
         Input: A legal query or description of a case.
         Output: A rephrased version of the input query focusing on the legal phrases.
         '''
-        response = self.client.models.generate_content(
-                model=self.model,
-                contents=user_input,
-                config=self.config
-            )
+        print("Rephrasing query:", user_input)
+        try:
+            response = self.client.models.generate_content(
+                    model=self.model,
+                    contents=user_input,
+                    config=self.config
+                )
+        except Exception as e:
+            print("Error during rephrasing:", e)
+            print("Returning original query.")
+            return {'rephrased_query': user_input}
         try:
             response_json = response.text[(response.text.index("```json")+ len("```json")):response.text.rindex("```")].strip()
         except Exception as e:

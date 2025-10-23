@@ -18,6 +18,7 @@ class RAGRetriever:
         ]
         self.document_content_description = "A section from the Bharatiya Nyaya Sanhita (BNS) describing a criminal offense, ist BNS section, its definition, and its punishment."
         llm_config = LlmConfigInfo()
+        os.environ["GOOGLE_API_KEY"] = llm_config.gemini_api_key
         self.llm = ChatGoogleGenerativeAI(model=llm_config.model)
         self.model_name = "sentence-transformers/all-MiniLM-L6-v2"
         self.embeddings = HuggingFaceEmbeddings(model_name=self.model_name)
@@ -39,15 +40,13 @@ class RAGRetriever:
             metadata_field_info=self.attribute_info,
             verbose=True  # Set to True to see the generated query
         )
+        try:
+            # Get the relevant documents
+            retrieved_docs = retriever.invoke(query)
+        except Exception as e:
+            print("Error during retrieval:", e)
+            retrieved_docs = []
 
-        # Get the relevant documents
-        retrieved_docs = retriever.invoke(query)
-
-        # Print the results
-        print("Retrieved documents:")
-        for doc in retrieved_docs:
-            print("-" * 50)
-            print("Content:", doc.page_content)
-            print("Metadata:", doc.metadata)
+        print("Number of documents retrieved:", len(retrieved_docs))
 
         return retrieved_docs

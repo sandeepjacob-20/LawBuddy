@@ -1,5 +1,6 @@
 LLM_Instructions:
-    Model: "gemini-2.5-flash"
+    Model: "gemini-2.5-pro"
+    ChatModel: "llama3.2:latest"
     legal_case_search:
         SystemInstructions: |
             You are an Indian court Helper AI assistant that searches through the internet to find legal cases similar to the ones

@@ -14,21 +14,22 @@ def read_config(config_path: str) -> dict:
 class ConfigInfo:
     def __init__(self):
         self.config_path = os.path.join(os.path.dirname(__file__), '..', 'configurations', 'config.yaml')
-        self.chroma_persist_directory = read_config(self.config_path)['ChromaDB']['persist_directory']
+        self.chroma_persist_directory = os.path.join(os.path.dirname(__file__),'..',read_config(self.config_path)['ChromaDB']['persist_directory'])
         self.chroma_collection_name = read_config(self.config_path)['ChromaDB']['collection_name']
     
 class LlmConfigInfo:
     def __init__(self):
-        self.config_path = os.path.join(os.path.dirname(__file__), '..', 'configurations', 'llm_config.yaml')
-        self.model = read_config(self.config_path)['LLM_Instructions']['Model']
+        config_path = os.path.join(os.path.dirname(__file__), '..', 'configurations', 'llm_config.yaml')
+        self.model = read_config(config_path)['LLM_Instructions']['Model']
+        self.chat_model = read_config(config_path)['LLM_Instructions']['ChatModel']
         self.gemini_api_key = os.environ['gemini_api_key']
 
 class LlmConfigInfo_LegalCaseSearch:
     def __init__(self):
-        self.config_path = os.path.join(os.path.dirname(__file__), '..', 'configurations', 'llm_config.yaml')
-        self.system_prompt = read_config(self.config_path)['legal_case_search']['SystemInstructions']
+        config_path = os.path.join(os.path.dirname(__file__), '..', 'configurations', 'llm_config.yaml')
+        self.system_prompt = read_config(config_path)['LLM_Instructions']['legal_case_search']['SystemInstructions']
 
 class LlmConfigInfo_Rephraser:
     def __init__(self):
-        self.config_path = os.path.join(os.path.dirname(__file__), '..', 'configurations', 'llm_config.yaml')
-        self.system_prompt = read_config(self.config_path)['rephrase_query']['SystemInstructions']
+        config_path = os.path.join(os.path.dirname(__file__), '..', 'configurations', 'llm_config.yaml')
+        self.system_prompt = read_config(config_path)['LLM_Instructions']['rephrase_query']['SystemInstructions']
