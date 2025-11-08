@@ -15,8 +15,11 @@ def legal_helper(query: str) -> str:
     print('Tool invoked for query : ',query)
     try:
         rephrased_query = Rephraser().rephrase_query(query)['rephrased_query']
+        print("**********STATUS UPDATE**************\nRephrasing completed.")
         retrieved_docs = RAGRetriever().rag_retriever(rephrased_query)
+        print("**********STATUS UPDATE**************\nRAG retrieval completed.")
         case_lookup_results = CaseLookupAI().get_case_lookup(rephrased_query)
+        print("**********STATUS UPDATE**************\nCase lookup completed.")
     except Exception as e:
         print("Error in legal_helper tool:", e)
         return {"error": str(e)}

@@ -1,9 +1,11 @@
 import streamlit as st
 from lib.core.graph import Graph
 
-app = Graph()
+if 'app' not in st.session_state:
+    st.session_state['app'] = Graph()
 
 st.set_page_config(page_title="Law Buddy", page_icon="⚖️", layout="centered")
+app = st.session_state['app']
 
 # # Minimalistic styling
 # st.markdown(
@@ -54,6 +56,7 @@ if prompt := st.chat_input("Type your legal query here..."):
     assistant_message = response['messages'][-1].content
     st.chat_message("assistant").markdown(assistant_message)
     st.session_state.messages.append({"role": "assistant", "content": assistant_message})
+
 
 # query = st.text_input("Type your legal query here...", "")
 

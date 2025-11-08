@@ -1,6 +1,7 @@
 from typing import Literal
 from langgraph.prebuilt import ToolNode
 from lib.core.legal_helper_tool import legal_helper
+from lib.core.fallback_tool import fallback_tool
 from langgraph.graph import StateGraph, END, MessagesState
 from lib.core.ollama import OllamaClient
 from langgraph.checkpoint.memory import MemorySaver
@@ -9,7 +10,7 @@ from langchain.schema import AIMessage
 
 class Graph:
     def __init__(self):
-        self.tools = [legal_helper.func]
+        self.tools = [legal_helper.func, fallback_tool.func]
         self.tool_node = ToolNode(self.tools)
         self.client = OllamaClient(tools=self.tools).client
         # self.client = OllamaClient().client
