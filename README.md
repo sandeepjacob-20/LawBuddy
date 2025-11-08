@@ -34,7 +34,7 @@ Law Buddy uses a combination of Retrieval-Augmented Generation (RAG) and Large L
 
 3.  **Install the dependencies:**
     ```bash
-    pip install -r requirements.txt
+    pip install -r requirement.txt
     ```
 
 4.  **Set up your environment variables:**
@@ -62,15 +62,19 @@ Law Buddy uses a combination of Retrieval-Augmented Generation (RAG) and Large L
 ```
 .
 ├── main.py                 # Streamlit application
-├── requirements.txt        # Project dependencies
+├── requirement.txt        # Project dependencies
 ├── lib
 │   ├── configurations      # Configuration files
 │   │   ├── config.yaml
 │   │   └── llm_config.yaml
 │   ├── core                # Core application logic
+│   │   ├── fallback_tool.py
 │   │   ├── graph.py
 │   │   ├── legal_case_search.py
-│   │   └── rag_retriever.py
+│   │   ├── legal_helper_tool.py
+│   │   ├── ollama.py
+│   │   ├── rag_retriever.py
+│   │   └── rephraser.py
 │   ├── RAG                 # RAG system files
 │   │   ├── bns_sections.csv
 │   │   └── rag_loader.py
